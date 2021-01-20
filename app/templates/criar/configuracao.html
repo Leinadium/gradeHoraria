@@ -1,0 +1,89 @@
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+{% block title %}Configuracao{% endblock %}
+{% block body %}
+
+<!-- select field -->
+<script src="{{ url_for('static', filename='bundle.min.js') }}"></script>
+
+<main class="px-3">
+  <div class="content-section">
+    <div class="center">
+      <h1>Configure suas escolhas</h1>
+      <br/>
+
+      <h3>Selecione os professores que você NÃO quer:</h3>
+      <span class="multi-select-professor"></span>
+      <br/>
+      <h3>Selecione as horas do dia que você NÃO quer:</h3>
+      <span class="multi-select-hora"></span>
+      <br/>
+      <h3>Selecione os destinos que você NÃO pode fazer:</h3>
+      <br/>
+      <span class="multi-select-destinos"></span>
+      <br/>
+      <h3>Selecione o máximo de aulas em um só dia:</h3>
+      <span class="single-select-max-aulas"></span>
+      <br/>
+      <h3>Selecione o mínimo de aulas em um só dia:</h3>
+      <span class="single-select-min-aulas"></span>
+      <br/>
+      <h3>Se possível, deixar um dia sem aulas:</h3>
+      <span class="single-select-dia-vazio"></span>
+      <br/>
+      <h3>Selecione o máximo de aulas em sequência:</h3>
+      <br/>
+      <span class="single-select-aulas-sequencia"></span>
+          <!-- <a href="/configuracao" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Criar</a> -->
+      <br/>
+      <button class="btn btn-lg btn-secondary fw-bold border-white bg-white" onclick="handleClick()">Finalizar</button>
+
+
+    </div>
+  </div>
+</main>
+<script>
+    const cursos = {{ list_cursos|safe }};
+    const opcoesProfessores = {{ dict_professores|safe }};
+    const opcoesHoras = {{ dict_horas|safe }};
+    const opcoesDestinos = {{ dict_destinos|safe }};
+    const opcoesNumAulas = [
+      {label: "1 aula", value: "1"},
+      {label: "2 aulas", value: "2"},
+      {label: "3 aulas", value: "3"},
+      {label: "4 aulas", value: "4"},
+      {label: "5 aulas", value: "5"},
+      {label: "6 aulas", value: "6"},
+    ];
+    const opcoesBool = [
+      {label: "Sim", value: "True"},
+      {label: "Não", value: "False"}
+    ];
+
+    var instance1 = new SelectPure(".multi-select-professor", {options: opcoesProfessores, multiple: true, inlineIcon: false, icon: "fa fa-times"});
+    var instance2 = new SelectPure(".multi-select-hora", {options: opcoesHoras, multiple: true, inlineIcon: false, icon: "fa fa-times"});
+    var instance3 = new SelectPure(".multi-select-destinos", {options: opcoesDestinos, multiple: true, inlineIcon: false, icon: "fa fa-times"});
+    var instance4 = new SelectPure(".single-select-max-aulas", {options: opcoesNumAulas, multiple: false, value: "5"});
+    var instance5 = new SelectPure(".single-select-min-aulas", {options: opcoesNumAulas, multiple: false, value: "2"});
+    var instance6 = new SelectPure(".single-select-dia-vazio", {options: opcoesBool, multiple: false, value: "True"});
+    var instance7 = new SelectPure(".single-select-aulas-sequencia", {options: opcoesNumAulas, multiple: false, value: "3"});
+
+    function handleClick() {
+      var url = "/resultado?";
+      url = url + 'cursos=' + cursos.join('&cursos=');
+      if (instance1.value() !== undefined) {url = url + '&no_prof' + instance1.value().join("&no_prof=");}
+      if (instance2.value() !== undefined) {url = url + '&no_hours' + instance2.value().join("&no_hours=");}
+      if (instance3.value() !== undefined) {url = url + '&no_destinos' + instance3.value().join("&no_destinos=");}
+      url = url + '&max_aulas_dia=' + instance4.value();
+      url = url + '&min_aulas_dia=' + instance5.value();
+      url = url + '&dia_vazio=' + instance6.value();
+      url = url + '&aulas_seguidas=' + instance7.value();
+
+      window.location.href = url;
+    }
+</script>
+
+
+
+{% endblock %}

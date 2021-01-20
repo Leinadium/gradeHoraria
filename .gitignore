@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+
+instance/config.py
+migrations/
+docs/
+venv/
+.idea/
+app/scraper/driver/*.exe
+app/scraper/credentials.json

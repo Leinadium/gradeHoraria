@@ -1,0 +1,44 @@
+
+{% extends "base.html" %}
+{% block title %}Selecao{% endblock %}
+{% block body %}
+
+<!-- select field -->
+<script src="{{ url_for('static', filename='bundle.min.js') }}"></script>
+
+<main class="px-3">
+    <div class="content-section">
+      <div class="center">
+        <h1>Selecione suas disciplinas</h1>
+        <br/>
+
+          <span class="multi-select"></span>
+          <!-- <a href="/configuracao" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Criar</a> -->
+          <button class="btn btn-lg btn-secondary fw-bold border-white bg-white" onclick="handleClick()">Avançar</button>
+
+      </div>
+    </div>
+</main>
+
+<script>
+    const myOptions = {{ dict_cursos|tojson }};
+
+    var instance = new SelectPure(".multi-select", {
+        options: myOptions,
+        multiple: true,
+        autocomplete: true,
+        inlineIcon: false,
+        icon: "fa fa-times"
+    });
+
+    function handleClick() {
+        var url = window.location.href + "/";
+        if (instance.value()) {
+            var lista = instance.value();
+            window.location.href = url + lista.join('-')
+        }
+    }
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,22 @@
+
+{% extends "base.html" %}
+{% block title %}Resultado{% endblock %}
+{% block body %}
+<div class="content-section">
+  <div class="center">
+    <h1>Não foi possível criar uma grade horária</h1>
+
+    {% if cursos %}
+      <p class="lead">Não consegui encontrar turmas com as suas configurações para os seguintes cursos:</p>
+      {% for curso in cursos %}
+        <p class="lead">{{curso}}</p>
+      {% endfor %}
+    {% endif %}
+    <p class="lead">Isso acontece quando algum curso possui poucas turmas disponíveis, ou foram muitas as restrições impostas
+    ao configurar sua grade, e por isso não foi possível encaixar nenhuma grade.
+
+    Tente novamente com outros cursos ou com menos restrições.</p>
+      <br/>
+  </div>
+</div>
+{% endblock %}
