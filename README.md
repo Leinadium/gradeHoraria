@@ -1,6 +1,7 @@
 # GradeGenerator
 
-Repositório do código do site ____
+Repositório do código do site ____ . O site é baseado em *Flask*, possui uma base de dados *MySQL*
+e se utiliza de *Selenium* para coletar as disciplinas diariamente disponibilizadas pela PUC-Rio
 
 ---
 
@@ -8,8 +9,7 @@ Repositório do código do site ____
 
 * Python 3.7
 * MySQL
-* Firefox/Chrome (para atualizar o banco de dados diariamente. Pode ser feito
-  manualmente como alternativa)
+* Firefox/Chrome (Alternativa: atualizar o banco manualmente quando for necessário)
 
 ---
 
@@ -69,3 +69,20 @@ export FLASK_APP=run.py
 export FLASK_CONFIG=production
 flask run
 ```
+
+---
+
+### Alternativa ao *Selenium* (caso não tenha Firefox/Chrome)
+O Selenium é utilizado para coletar as turmas fornecidas em *[puc-rio.br/microhorario]()*.
+O script de atualização é executado durante a noite automaticamente, mas pode ser desligado editando o arquivo
+`app/__init__.py`, desabilitando o *APScheduler*.
+
+---
+
+### Créditos:
+
+**Tutorial**: [Build a CRUD web app with python and flask](https://www.digitalocean.com/community/tutorials/build-a-crud-web-app-with-python-and-flask-part-one)
+
+**HTML Template**: [Cover Template](https://getbootstrap.com/docs/5.0/examples/cover/#)
+
+**Javascript**: [SelectPure](https://www.cssscript.com/multi-select-autocomplete-selectpure/)
