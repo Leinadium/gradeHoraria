@@ -50,3 +50,13 @@ class Destino(db.Model):
 
     def __repr__(self):
         return '<Destino %s>' % self.code
+
+
+class Grade(db.Model):
+    __tablename__ = 'grades'
+
+    id = db.Column(db.String(30), primary_key=True)
+    grade = db.Column(db.String(100))
+
+    def __repr__(self):
+        return '<Grade %d>' % self.id
