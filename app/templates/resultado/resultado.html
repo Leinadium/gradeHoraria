@@ -1,0 +1,169 @@
+<!-- app/templates/base.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }} | GradeGenerator</title>
+
+    <!-- bootstrap -->
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+    <!-- Custom style -->
+    <link href="{{ url_for('static', filename='css/cover.css') }}" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
+    <!-- Font awesome -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- codyhouse -->
+    <script>document.getElementsByTagName("html")[0].className += 'js';</script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+ </head>
+<body class="d-flex h-100 text-white bg-dark">
+
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+
+  <header class="mb-auto">
+    <div>
+      <h3 class="float-md-start mb-0">GradeGenerator</h3>
+      <nav class="nav nav-masthead justify-content-center float-md-end">
+        <a class="nav-link" href="{{ url_for('home.homepage') }}">Inicio</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="px-3 text-center">
+    <h1 style="color: white">Resultado</h1>
+    <p class="lead text-center">Compartilhe: <a href="">{{ link }}</a></p>
+  </main>
+
+  <div class="cd-schedule cd-schedule--loading margin-top-lg margin-bottom-lg js-cd-schedule">
+      <div class="cd-schedule__timeline">
+        <ul>
+          <li><span>07:00</span></li>
+          <li><span>08:00</span></li>
+          <li><span>09:00</span></li>
+          <li><span>10:00</span></li>
+          <li><span>11:00</span></li>
+          <li><span>12:00</span></li>
+          <li><span>13:00</span></li>
+          <li><span>14:00</span></li>
+          <li><span>15:00</span></li>
+          <li><span>16:00</span></li>
+          <li><span>17:00</span></li>
+          <li><span>18:00</span></li>
+        </ul>
+      </div> <!-- .cd-schedule__timeline -->
+
+      <div class="cd-schedule__events">
+        <ul>
+          <li class="cd-schedule__group">
+            <div class="cd-schedule__top-info"><span>Segunda</span></div>
+            <ul>
+              {% for x in escolhas %}
+              {% if 'SEG' in x.dia %}
+              <li class="cd-schedule__event">
+                <a data-start="{{x.inicio}}" data-end="{{x.fim}}" data-content="{{x.curso}}_{{x.turma}}" data-event="event-{{ x.indice }}" href="#0">
+                  <em class="cd-schedule__name ">{{x.curso}}</em>
+                </a>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+          <li class="cd-schedule__group">
+            <div class="cd-schedule__top-info"><span>Terça</span></div>
+            <ul>
+              {% for x in escolhas %}
+              {% if 'TER' in x.dia %}
+              <li class="cd-schedule__event">
+                <a data-start="{{x.inicio}}" data-end="{{x.fim}}" data-content="{{x.curso}}_{{x.turma}}" data-event="event-{{ x.indice }}" href="#0">
+                  <em class="cd-schedule__name ">{{x.curso}}</em>
+                </a>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+          <li class="cd-schedule__group">
+            <div class="cd-schedule__top-info"><span>Quarta</span></div>
+            <ul>
+              {% for x in escolhas %}
+              {% if 'QUA' in x.dia %}
+              <li class="cd-schedule__event">
+                <a data-start="{{x.inicio}}" data-end="{{x.fim}}" data-content="{{x.curso}}_{{x.turma}}" data-event="event-{{ x.indice }}" href="#0">
+                  <em class="cd-schedule__name ">{{x.curso}}</em>
+                </a>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+          <li class="cd-schedule__group">
+            <div class="cd-schedule__top-info"><span>Quinta</span></div>
+            <ul>
+              {% for x in escolhas %}
+              {% if 'QUI' in x.dia %}
+              <li class="cd-schedule__event">
+                <a data-start="{{x.inicio}}" data-end="{{x.fim}}" data-content="{{x.curso}}_{{x.turma}}" data-event="event-{{ x.indice }}" href="#0">
+                  <em class="cd-schedule__name ">{{x.curso}}</em>
+                </a>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+          <li class="cd-schedule__group">
+            <div class="cd-schedule__top-info"><span>Sexta</span></div>
+            <ul>
+              {% for x in escolhas %}
+              {% if 'SEX' in x.dia %}
+              <li class="cd-schedule__event">
+                <a data-start="{{x.inicio}}" data-end="{{x.fim}}" data-content="{{x.curso}}_{{x.turma}}" data-event="event-{{ x.indice }}" href="#0">
+                  <em class="cd-schedule__name ">{{x.curso}}</em>
+                </a>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div class="cd-schedule-modal">
+        <header class="cd-schedule-modal__header">
+          <div class="cd-schedule-modal__content">
+            <span class="cd-schedule-modal__date"></span>
+            <h3 class="cd-schedule-modal__name"></h3>
+          </div>
+
+          <div class="cd-schedule-modal__header-bg"></div>
+        </header>
+
+        <div class="cd-schedule-modal__body">
+          <div class="cd-schedule-modal__event-info"></div>
+          <div class="cd-schedule-modal__body-bg"></div>
+        </div>
+
+        <a href="#0" class="cd-schedule-modal__close text-replace">Close</a>
+      </div>
+
+      <div class="cd-schedule__cover-layer"></div>
+    </div> <!-- .cd-schedule -->
+
+  <script src="{{ url_for('static', filename='js/util.js') }}"></script> <!-- util functions included in the CodyHouse framework -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+  <footer class="mt-auto text-white-50 text-center ">
+    <p>Copyright © 2021 - Daniel Guimarães</p>
+  </footer>
+</div>
+</body>
+</html>
+
+
