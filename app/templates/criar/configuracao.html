@@ -1,11 +1,10 @@
 
-{% import "bootstrap/wtf.html" as wtf %}
 {% extends "base.html" %}
 {% block title %}Configuracao{% endblock %}
 {% block body %}
 
 <!-- select field -->
-<script src="{{ url_for('static', filename='bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bundle.min.js') }}"></script>
 
 <main class="px-3">
   <div class="content-section">
@@ -70,11 +69,11 @@
     var instance7 = new SelectPure(".single-select-aulas-sequencia", {options: opcoesNumAulas, multiple: false, value: "3"});
 
     function handleClick() {
-      var url = "/resultado?";
+      var url = "/gerar?";
       url = url + 'cursos=' + cursos.join('&cursos=');
-      if (instance1.value() !== undefined) {url = url + '&no_prof' + instance1.value().join("&no_prof=");}
-      if (instance2.value() !== undefined) {url = url + '&no_hours' + instance2.value().join("&no_hours=");}
-      if (instance3.value() !== undefined) {url = url + '&no_destinos' + instance3.value().join("&no_destinos=");}
+      if (instance1.value() !== undefined) {url = url + '&no_prof=' + instance1.value().join("&no_prof=");}
+      if (instance2.value() !== undefined) {url = url + '&no_hours=' + instance2.value().join("&no_hours=");}
+      if (instance3.value() !== undefined) {url = url + '&no_destinos=' + instance3.value().join("&no_destinos=");}
       url = url + '&max_aulas_dia=' + instance4.value();
       url = url + '&min_aulas_dia=' + instance5.value();
       url = url + '&dia_vazio=' + instance6.value();
