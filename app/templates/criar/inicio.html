@@ -4,7 +4,12 @@
 {% block body %}
 
 <!-- select field -->
-<script src="{{ url_for('static', filename='js/bundle.min.js') }}"></script>
+
+<!-- <script src="{{ url_for('static', filename='js/bundle.min.js') }}"></script> -->
+<script src="{{ url_for('static', filename='js/select.js') }}"></script>
+<link rel="stylesheet" href="{{url_for('static', filename='css/select.css') }}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
 <main class="px-3">
     <div class="content-section">
@@ -12,8 +17,8 @@
         <h1>Selecione suas disciplinas</h1>
         <br/>
 
-          <span class="multi-select"></span>
-          <!-- <a href="/configuracao" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Criar</a> -->
+          <div style="max-width: 500px" id="select-multi"></div>
+          <br/>
           <button class="btn btn-lg btn-secondary fw-bold border-white bg-white" onclick="handleClick()">Avançar</button>
 
       </div>
@@ -23,18 +28,20 @@
 <script>
     const myOptions = {{ dict_cursos|tojson }};
 
-    var instance = new SelectPure(".multi-select", {
+    VirtualSelect.init({
+        ele: '#select-multi',
         options: myOptions,
         multiple: true,
-        autocomplete: true,
-        inlineIcon: false,
-        icon: "fa fa-times"
-    });
+        search: true,
+        placeholder: 'Selecione suas disciplinas',
+        position: 'auto',
+        optionHeight: '40px'
+    })
 
     function handleClick() {
         var url = window.location.href + "/";
-        if (instance.value()) {
-            var lista = instance.value();
+        var lista = $('#select-multi').val();
+        if (lista) {
             window.location.href = url + lista.join('-')
         }
     }
