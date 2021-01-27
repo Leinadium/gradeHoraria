@@ -31,10 +31,16 @@ def configuracao(escolhas):
     for e in escolhas:
         all_turmas.extend([x for x in Turma.query.filter_by(curso=e)])
 
-    # finding all the professores
-    professores = set()
-    professores.update([x.prof for x in all_turmas])
-    professores = [{'label': x, 'value': x} for x in professores]  # final dicts
+    # finding all the professores and its courses
+    professores = dict()
+    for x in all_turmas:
+        prof = x.prof
+        if prof in professores and x.curso not in professores[prof]:
+            professores[prof].append(x.curso)
+        else:
+            professores[prof] = [x.curso]
+
+    professores = [{'label': '%s [%s]' % (x, ', '.join(professores[x])), 'value': x} for x in professores]
 
     # finding all the possible times
     times = set()
