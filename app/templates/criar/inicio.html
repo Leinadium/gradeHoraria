@@ -35,13 +35,15 @@
         search: true,
         placeholder: 'Selecione suas disciplinas',
         position: 'auto',
-        optionHeight: '40px'
+        optionHeight: '40px',
+        count: 10
     })
 
     function handleClick() {
-        var url = window.location.href + "/";
-        var lista = $('#select-multi').val();
-        if (lista) {
+        let url = window.location.href + "/";
+        let lista = $('#select-multi').val();
+        console.log(lista);
+        if (lista.length !== 0) {
             window.location.href = url + lista.join('-')
         }
     }
