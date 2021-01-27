@@ -10,6 +10,7 @@ DEBUG = False
 
 SRCPATH = path.dirname(path.realpath(__file__))
 
+PATH_TO_CREDENTIALS = path.join(SRCPATH, 'credentials.json')
 PATH_TO_DRIVER = path.join(SRCPATH, 'driver', 'geckodriver27.exe')
 PATH_TO_DATA_FOLDER = path.join(SRCPATH, 'data')
 PATH_TO_DATA_CSV = path.join(PATH_TO_DATA_FOLDER, 'download.csv')
@@ -73,9 +74,13 @@ def _read_all_courses():
     b.get('https://www.puc-rio.br/microhorario')
 
     # sometimes there is a popup, we need to accept before continuing
-    popup_box = b.find_element_by_xpath('/html/body/div[2]/div[3]/div/button')
-    if popup_box is not None:
-        popup_box.click()
+    try:
+        popup_box = b.find_element_by_xpath('/html/body/div[2]/div[3]/div/button')
+        if popup_box is not None:
+            popup_box.click()
+
+    except Exception as e:
+        pass
 
     print("  Searching all courses and waiting")
     # searching any course

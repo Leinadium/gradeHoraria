@@ -4,7 +4,7 @@ This module is used to generate
 """
 
 from .models import Course, Classroom, Destino
-from .scraper import PATH_TO_DATA_JSON, PATH_TO_DATA_DESTINO
+from .scraper import PATH_TO_DATA_JSON, PATH_TO_DATA_DESTINO, PATH_TO_CREDENTIALS
 
 import json
 import re
@@ -16,7 +16,7 @@ all_destinos = dict()
 
 
 def load_credentials():
-    with open('credentials.json', 'r') as f:
+    with open(PATH_TO_CREDENTIALS, 'r') as f:
         j = json.load(f)
     return j
 
@@ -90,15 +90,16 @@ def save_all():
     # removing previous data
     query_cleaning = """DELETE FROM turmas"""
     cursor.execute(query_cleaning)
+    connection.commit()
 
     # removing previous data
     query_cleaning = """DELETE FROM cursos"""
     cursor.execute(query_cleaning)
+    connection.commit()
 
     # removing previous data
     query_cleaning = """DELETE FROM destinos"""
     cursor.execute(query_cleaning)
-
     connection.commit()
 
     # adding the new data
