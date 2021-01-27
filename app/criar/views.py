@@ -1,9 +1,7 @@
-from flask import redirect, render_template, url_for, request
+from flask import render_template
 
 from . import criar
-from .forms import CreatingForm, ConfigForm
 from ..models import Curso, Turma, Destino
-from .. import db
 
 from json import dumps
 

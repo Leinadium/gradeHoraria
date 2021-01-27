@@ -1,7 +1,7 @@
-from flask import redirect, render_template, url_for, request, abort
+from flask import redirect, render_template, url_for, request
 
 from . import resultado
-from ..models import Curso, Turma, Destino, Grade
+from ..models import Curso, Turma, Grade
 from . import grade_generator
 from .. import db
 
@@ -61,8 +61,6 @@ def gerar_resultado():
 
     # redirecting to the /g/
     return redirect(url_for('resultado.g', i=i))
-
-#####
 
 
 @resultado.route('/erro')
