@@ -154,7 +154,6 @@ def run(cursos, no_prof, no_hours, no_destinos, max_aulas_dia, min_aulas_dia, di
                 best_grade = i
 
     if max_score is None:
-        print("nao achei")
         return 'erro', []
 
     print(best_grade)

@@ -22,7 +22,6 @@ scheduler = BackgroundScheduler()
 
 @scheduler.scheduled_job('cron', id='job_scraper', hour=0)
 def run_scraper():
-    print("teste")
     scraper.run()
     scraper.update_database()
 
