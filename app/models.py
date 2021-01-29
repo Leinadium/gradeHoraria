@@ -27,7 +27,7 @@ class Turma(db.Model):
     curso = db.Column(db.String(7), db.ForeignKey('cursos.code'), primary_key=True)
     code = db.Column(db.String(3), index=True, primary_key=True)
     prof = db.Column(db.String(50))
-    time = db.Column(db.String(30))  # day,start,end;day,start,end...
+    time = db.Column(db.String(50))  # day,start,end;day,start,end...
     dest = db.Column(db.String(3), primary_key=True)
     slots = db.Column(db.Integer)
     shift = db.Column(db.String(1))

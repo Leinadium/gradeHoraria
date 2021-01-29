@@ -54,10 +54,11 @@ def _rename_downloaded_file():
     If there is more than one file, it aborts
     """
     files = listdir(PATH_TO_DATA_FOLDER)
-    if len(files) == 1:
-        file = path.join(PATH_TO_DATA_FOLDER, files[0])  # absolute path to file
-        rename(file, PATH_TO_DATA_CSV)  # rename to download.csv
-
+    for f in files:
+        if 'HORARIO' in f:
+            file = path.join(PATH_TO_DATA_FOLDER, f)  # absolute path to file
+            rename(file, PATH_TO_DATA_CSV)  # rename to download.csv
+            break
     return
 
 

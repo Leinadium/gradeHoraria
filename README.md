@@ -35,7 +35,7 @@ Além disso, crie um arquivo `app/scraper/credentials.json` com as credenciais p
 ```json
 {
   "user": "usuário",
-  "passwr": "senha",
+  "passwd": "senha",
   "db": "grade_horaria"
 }
 ```
@@ -43,7 +43,7 @@ Além disso, crie um arquivo `app/scraper/credentials.json` com as credenciais p
 Baixe o [geckodriver](https://github.com/mozilla/geckodriver/releases) do Firefox. Ele
 é utilizado para coletar as disciplinas automaticamente todo dia do site da PUC-Rio. Mova
 para o diretório `app/scraper/driver/`. Verifique se o nome do arquivo corresponde com o nome dentro do código
-do arquivo `app/scraper/scraper.py`    
+do arquivo `app/scraper/scraper.py` 
 OBS: Caso não tenha Firefox, pode ser utilizado os drivers do Chrome. Porém, o código fonte deverá ser modificado.
 
 
@@ -53,7 +53,7 @@ export FLASK_APP=run.py
 export FLASK_CONFIG=development
 flask db init
 flask db migrate
-flask db update
+flask db upgrade
 ```
 
 Popule o banco de dados.
