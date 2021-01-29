@@ -1,12 +1,12 @@
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+# from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support.ui import Select
 from os import path, rename, listdir, remove, devnull
 from time import sleep
 import json
 import csv
 
-DEBUG = False
+SELENIUM_SOURCE = 'firefox'
 
 SRCPATH = path.dirname(path.realpath(__file__))
 
@@ -17,8 +17,8 @@ PATH_TO_DATA_CSV = path.join(PATH_TO_DATA_FOLDER, 'download.csv')
 PATH_TO_DATA_JSON = path.join(PATH_TO_DATA_FOLDER, 'download.json')
 PATH_TO_DATA_DESTINO = path.join(PATH_TO_DATA_FOLDER, 'destinos.json')
 
-if not path.exists(PATH_TO_DRIVER):
-    raise Exception("Driver not installed")
+# if not path.exists(PATH_TO_DRIVER):
+#     raise Exception("Driver not installed")
 
 
 def _get_browser():
@@ -26,14 +26,33 @@ def _get_browser():
     Opens a browser window to navigate
     :return: webdriver.Firefox object
     """
-    opt = Options()
-    opt.headless = not DEBUG  # Change for debbuging
-    opt.set_preference("browser.download.folderList", 2)  # custom download folder
-    opt.set_preference("browser.download.manager.showWhenStarting", False)  # disable showing when downloading
-    opt.set_preference("browser.download.dir", PATH_TO_DATA_FOLDER)
-    opt.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/csv")
+    # IF FIREFOX
+    if SELENIUM_SOURCE == 'firefox':
+        from selenium.webdriver.firefox.options import Options
+        opt = Options()
+        opt.headless = True  # Change for debbuging
+        opt.set_preference("browser.download.folderList", 2)  # custom download folder
+        opt.set_preference("browser.download.manager.showWhenStarting", False)  # disable showing when downloading
+        opt.set_preference("browser.download.dir", PATH_TO_DATA_FOLDER)
+        opt.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/csv")
+        browser = webdriver.Firefox(options=opt, executable_path=PATH_TO_DRIVER, service_log_path=devnull)
 
-    browser = webdriver.Firefox(options=opt, executable_path=PATH_TO_DRIVER, service_log_path=devnull)
+    # IF CHROME
+    elif SELENIUM_SOURCE == 'chrome':
+        from selenium.webdriver.chrome.options import Options
+        opt = Options()
+        opt.headless = True  # Change for debbuging
+        opt.add_experimental_option("prefs", {
+            "download.default_directory": PATH_TO_DATA_FOLDER,
+            "download.prompt_for_download": False,
+            "download.directory_upgrade": True,
+            "safebrowsing.enabled": True
+        })
+        browser = webdriver.Firefox(options=opt, service_log_path=devnull)
+
+    else:
+        raise Exception("Unknown source for selenium webdriver")
+
     return browser
 
 
@@ -55,7 +74,7 @@ def _rename_downloaded_file():
     """
     files = listdir(PATH_TO_DATA_FOLDER)
     for f in files:
-        if 'HORARIO' in f:
+        if f.endswith('.csv'):
             file = path.join(PATH_TO_DATA_FOLDER, f)  # absolute path to file
             rename(file, PATH_TO_DATA_CSV)  # rename to download.csv
             break
@@ -98,6 +117,9 @@ def _read_all_courses():
     format_selection.select_by_visible_text('Texto (.csv)')
     download_box = b.find_element_by_xpath('//*[@id="btnDownload"]')
     download_box.click()
+
+    print("  Waiting for the download to finish")
+    sleep(10)
 
     print("  Renaming downloaded file")
     _rename_downloaded_file()
