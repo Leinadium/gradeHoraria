@@ -1,10 +1,13 @@
 __pycache__/
 *.pyc
 
+.idea/
+.vscode/
+venv/
+
+app/scraper/credentials.json
 instance/config.py
 migrations/
 docs/
-venv/
-.idea/
+
 app/scraper/driver/*.exe
-app/scraper/credentials.json
