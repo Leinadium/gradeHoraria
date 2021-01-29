@@ -19,7 +19,8 @@ def _carregar_turmas_possiveis(cursos, no_prof, no_hours, no_destinos):
     for turma in r:
         to_add = True
         for time in turma.time.split(';'):
-            if time == '':
+            if time.strip() == '':
+                to_add = False
                 break
             day, start, end = time.split(',')
             for h in no_hours:
@@ -137,12 +138,7 @@ def run(cursos, no_prof, no_hours, no_destinos, max_aulas_dia, min_aulas_dia, di
     if x:  # there is a curso with no turmas left
         return 'erro', x
 
-    for t in turmas:
-        print(turmas[t])
-
     iterator = _criar_combinacoes_possiveis(turmas)
-    print('tamanho do iter:', len(iterator))
-    print('iter', iterator)
 
     max_score = None
     best_grade = None
@@ -156,6 +152,4 @@ def run(cursos, no_prof, no_hours, no_destinos, max_aulas_dia, min_aulas_dia, di
     if max_score is None:
         return 'erro', []
 
-    print(best_grade)
-    print('score', max_score)
     return best_grade
