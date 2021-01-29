@@ -99,7 +99,7 @@ def g(i):
                              'indice': indice + 1})
 
     # generate link
-    link = 'localhost:5000/g/' + i
+    link = '5p.myddns.me:5000/g/' + i
 
     return render_template('resultado/resultado.html', escolhas=escolhas, title='Resultado', link=link)
 
