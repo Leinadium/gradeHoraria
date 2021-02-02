@@ -98,18 +98,27 @@ def g(i):
 
     # generate the result page with the turma objects
     escolhas = []
+    indice_online = 7  # starting hour to place at SHF column
     for indice, x in enumerate(list_turmas):
         for t in x.time.split(';'):
-            dia, inicio, fim = t.split(',')
-            fim += ':00'
-            inicio += ':00'
+
+            if t == '':  # parse SHF
+                dia = 'SHF'
+                inicio = '%d:00' % indice_online
+                fim = '%d:00' % (indice_online + 2)
+                indice_online += 2
+            else:
+                dia, inicio, fim = t.split(',')
+                fim += ':00'
+                inicio += ':00'
+            
             escolhas.append({'dia': dia, 'inicio': inicio, 'fim': fim, 'curso': x.curso, 'turma': x.code,
                              'indice': indice + 1})
 
     # generate link
     link = '5p.myddns.me:5000/g/' + i
 
-    return render_template('resultado/resultado.html', escolhas=escolhas, title='Resultado', link=link)
+    return render_template('resultado/resultado.html', escolhas=escolhas, title='Resultado', link=link, tem_shf=indice_online!=7)
 
 
 @resultado.route("/info/<string:curso_turma>")
