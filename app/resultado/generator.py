@@ -2,37 +2,19 @@ from ..models import Turma
 from itertools import product
 
 
-def _carregar_turmas_possiveis(cursos, no_prof, no_hours, no_destinos):
+def _carregar_turmas_possiveis(cursos,no_destinos):
     """
     Get all turmas within the following restrictions
     :param cursos: list of cursos code
-    :param no_prof: list of professors names to ignore
-    :param no_hours: list of hours to ignore
     :param no_destinos: list of destinos to ignore
     :return: dict Curso.code -> Turma
     """
 
-    r = Turma.query.filter(Turma.curso.in_(cursos), ~Turma.prof.in_(no_prof),
-                           ~Turma.dest.in_(no_destinos)).all()
+    r = Turma.query.filter(Turma.curso.in_(cursos), ~Turma.dest.in_(no_destinos)).all()
     # parsing the times
-    new_r = []
-    for turma in r:
-        to_add = True
-        for time in turma.time.split(';'):
-            if time.strip() == '':
-                to_add = False
-                break
-            day, start, end = time.split(',')
-            for h in no_hours:
-                if int(start) <= int(h) <= int(end):
-                    to_add = False
-                    break
-
-        if to_add:
-            new_r.append(turma)
 
     d = dict()
-    for turma in new_r:
+    for turma in r:
         if turma.curso not in d:
             d[turma.curso] = [turma]
         else:
@@ -60,7 +42,7 @@ def _checa_turmas(turmas_escolhidas, cursos):
     return r
 
 
-def _validate_and_score_grade(grade, max_aulas_dia, min_aulas_dia, dia_vazio, aulas_seguidas):
+def _validate_and_score_grade(grade, prof, no_hours, max_aulas_dia, min_aulas_dia, dia_vazio, aulas_seguidas, turno, shf):
     """
     Checks if grade if valid, and then gives a score
     :return: False if not valid, a score if valid
@@ -68,14 +50,36 @@ def _validate_and_score_grade(grade, max_aulas_dia, min_aulas_dia, dia_vazio, au
     days = dict()
     aulas_day = dict()
     turma_day = dict()
+    score = 0
+
     for t in grade:
-        # if t.slots == 0:  # check slots
-        #     return None
+
+        # PONTUACAO PROF
+        if t.prof in prof:
+            score += 20
 
         for time in t.time.split(';'):
-            if time == '':
+            
+            # PONTUACAO SHF
+            if time == '':  
+                if not shf:
+                    score -= 20
                 break
+
             day, start, end = time.split(',')
+
+            # PONTUACAO HORA
+            for hora in no_hours:
+                if int(start) <= int(hora) <= int(end):
+                    score -= 7
+
+            # PONTUACAO TURNO
+            if turno == 'T':
+                score += 5 if int(start) >= 13 else -5
+
+            elif turno == 'M':
+                score += 5 if int(end) <= 13 else -5
+
             if day not in days:
                 days[day] = list(range(int(start), int(end)))
                 aulas_day[day] = 1
@@ -83,21 +87,27 @@ def _validate_and_score_grade(grade, max_aulas_dia, min_aulas_dia, dia_vazio, au
             else:
                 for i in range(int(start), int(end)):
                     if i in days[day]:
-                        return None
+                        return None   # INVALID GRADE
                     days[day].append(i)
                 aulas_day[day] += 1
                 turma_day[day].append(t)
 
-    score = 0
+
     for x in aulas_day.values():
+
+        # PONTUACAO DIA VAZIO
         if x == 0:
-            score += 10 if dia_vazio else - 10
+            score += 15 if dia_vazio else -15
 
+        # PONTUACAO MAX DE AULAS
         elif x > max_aulas_dia:
-            score -= 5
+            score -= 10 * (x - max_aulas_dia)
+        
+        # PONTUACAO MIN DE AULAS
         elif x < min_aulas_dia:
-            score -= 5
+            score -= 10 * (min_aulas_dia - x)
 
+    # PONTUACAO AULAS SEQUENCIA
     for x in turma_day.values():
         seq = 1
         for turma in x:
@@ -110,30 +120,34 @@ def _validate_and_score_grade(grade, max_aulas_dia, min_aulas_dia, dia_vazio, au
                         start = int(tt.split(',')[1])
                         if end + 1 == start:
                             seq += 1
+
         if seq > aulas_seguidas:
-            score -= 5 * (seq - aulas_seguidas)
+            score -= 10 * (seq - aulas_seguidas)
         else:
-            score += 2 * seq
+            score += 5 * seq
 
     return score
 
 
-def run(cursos, no_prof, no_hours, no_destinos, max_aulas_dia, min_aulas_dia, dia_vazio, aulas_seguidas):
+def run(cursos, prof, no_hours, no_destinos, max_aulas_dia, min_aulas_dia, dia_vazio, aulas_seguidas, turno, shf):
     """
     Run the generator, return the best possible Grade
     :param cursos: list of cursos code
-    :param no_prof: list of professors names to ignore
-    :param no_hours: list of hours to ignore
+    :param prof: list of professors names to reward
+    :param no_hours: list of hours to punish
     :param no_destinos: list of destinos to ignore
     :param max_aulas_dia: integer of max class each day
     :param min_aulas_dia: integer of min class each day
     :param dia_vazio: bool "is having an empty day good?"
     :param aulas_seguidas: integer of max sequencial classes
-    :return: list of best possible turmas to create a grade
+    :param turno: 'M', 'T', 'A'
+    :param shf: bool "want to have a shf"?
+
+    :return: (erro, cursos),
+             (sucesso, grade, len(grades), len(grades_validas))
     """
 
-    turmas = _carregar_turmas_possiveis(cursos, no_prof, no_hours, no_destinos)
-    # print('turmas', turmas)
+    turmas = _carregar_turmas_possiveis(cursos, no_destinos)
     x = _checa_turmas(turmas, cursos)
     if x:  # there is a curso with no turmas left
         return 'erro', x
@@ -142,9 +156,15 @@ def run(cursos, no_prof, no_hours, no_destinos, max_aulas_dia, min_aulas_dia, di
 
     max_score = None
     best_grade = None
+    total_grades = 0
+    total_grades_validas = 0
     for i in iterator:
-        x = _validate_and_score_grade(i, max_aulas_dia, min_aulas_dia, dia_vazio, aulas_seguidas)
+        total_grades += 1
+        x = _validate_and_score_grade(i, prof, no_hours, max_aulas_dia, min_aulas_dia, dia_vazio, 
+                                        aulas_seguidas, turno, shf)
+
         if x is not None:
+            total_grades_validas += 1
             if max_score is None or x > max_score:
                 max_score = x
                 best_grade = i
@@ -152,4 +172,5 @@ def run(cursos, no_prof, no_hours, no_destinos, max_aulas_dia, min_aulas_dia, di
     if max_score is None:
         return 'erro', []
 
-    return best_grade
+    print("pontuacao:", max_score)
+    return ('sucesso', best_grade, total_grades, total_grades_validas)

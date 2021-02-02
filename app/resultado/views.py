@@ -28,6 +28,8 @@ def gerar_resultado():
     min_aulas_dia = request.args.get('min_aulas_dia')
     dia_vazio = request.args.get('dia_vazio')
     aulas_seguidas = request.args.get('aulas_seguidas')
+    turno = request.args.get('turno')
+    shf = request.args.get('shf')
 
     print('cursos', cursos)
     print('no_prof', no_prof)
@@ -37,20 +39,26 @@ def gerar_resultado():
     print('min_aulas_dia', min_aulas_dia, type(min_aulas_dia))
     print('dia_vazio', dia_vazio, type(dia_vazio))
     print('aulas_seguidas', aulas_seguidas)
+    print('turno', turno)
+    print('shf', shf)
 
     # generating the grade
     # best_grade = [turma1, turma2, turma3...] OR ['erro', error]
     best_grade = grade_generator(cursos, no_prof, no_hours, no_destinos, int(max_aulas_dia), int(min_aulas_dia),
-                                 True if dia_vazio == 'True' else False, int(aulas_seguidas))
+                                 True if dia_vazio == 'True' else False, int(aulas_seguidas), turno, True if shf == 'True' else False)
 
     # checking if it is invalid
     if best_grade[0] == 'erro':
         return redirect(url_for('resultado.erro', c=best_grade[1]))
 
+    # TODO: adicionar o total de grades e o total de grades validas. Por enquanto, so imprimindo
+    print('total_grades: ', best_grade[2])
+    print('total_grades_validas: ', best_grade[3])
+    best_grade = best_grade[1]
+
     # creating the id of grade, and its string
     s = '_'.join([str(x.curso) + '-' + str(x.code) for x in best_grade])
     i = format(hash(s), 'x')
-    print(i)
 
     # check if it has been generated before
     if Grade.query.filter_by(id=i).first() is None:

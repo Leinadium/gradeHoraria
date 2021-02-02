@@ -12,33 +12,36 @@
       <h1>Configure suas escolhas</h1>
       <br/>
 
-      <h3>Selecione os professores que você NÃO quer:</h3>
+      <h3>Selecione os professores que gostaria de ter:</h3>
       <span class="multi-select-professor"></span>
       <br/>
-      <h3>Selecione as horas do dia que você NÃO quer:</h3>
+      <h3>Selecione as horas do dia que prefere não ter aulas:</h3>
       <span class="multi-select-hora"></span>
       <br/>
-      <h3>Selecione os destinos que você NÃO pode fazer:</h3>
+      <h3>Selecione os destinos que não estão disponíveis para seu curso</h3>
       <br/>
       <span class="multi-select-destinos"></span>
       <br/>
-      <h3>Selecione o máximo de aulas em um só dia:</h3>
+      <h3>Selecione qual o máximo de aulas em um só dia que deseja:</h3>
       <span class="single-select-max-aulas"></span>
       <br/>
-      <h3>Selecione o mínimo de aulas em um só dia:</h3>
+      <h3>Selecione qual o mínimo de aulas em um só dia que deseja:</h3>
       <span class="single-select-min-aulas"></span>
       <br/>
-      <h3>Se possível, deixar um dia sem aulas:</h3>
+      <h3>Se possível, deixar um dia sem aulas?</h3>
       <span class="single-select-dia-vazio"></span>
       <br/>
-      <h3>Selecione o máximo de aulas em sequência:</h3>
-      <br/>
+      <h3>Selecione qual o máximo de aulas em sequência que deseja:</h3>
       <span class="single-select-aulas-sequencia"></span>
-          <!-- <a href="/configuracao" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Criar</a> -->
       <br/>
+      <h3>Selecione qual turno do dia prefere ter as aulas:</h3>
+      <span class="single-select-turno"></span>
+      <br/>
+      <h3>Deseja selecionar turmas sem horário definido (SHF)?</h3>
+      <span class="single-select-shf"></span>
+
+      <!-- <a href="/configuracao" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Criar</a> -->
       <button class="btn btn-lg btn-secondary fw-bold border-white bg-white" onclick="handleClick()">Finalizar</button>
-
-
     </div>
   </div>
 </main>
@@ -60,6 +63,12 @@
       {label: "Não", value: "False"}
     ];
 
+    const opcoesTurno = [
+      {label: "Manhã", value: "M"},
+      {label: "Tarde", value: "T"}, 
+      {label: "Ambos", value: "A"}
+    ]
+
     var instance1 = new SelectPure(".multi-select-professor", {options: opcoesProfessores, multiple: true, inlineIcon: false, icon: "fa fa-times"});
     var instance2 = new SelectPure(".multi-select-hora", {options: opcoesHoras, multiple: true, inlineIcon: false, icon: "fa fa-times"});
     var instance3 = new SelectPure(".multi-select-destinos", {options: opcoesDestinos, multiple: true, inlineIcon: false, icon: "fa fa-times"});
@@ -67,8 +76,12 @@
     var instance5 = new SelectPure(".single-select-min-aulas", {options: opcoesNumAulas, multiple: false, value: "2"});
     var instance6 = new SelectPure(".single-select-dia-vazio", {options: opcoesBool, multiple: false, value: "True"});
     var instance7 = new SelectPure(".single-select-aulas-sequencia", {options: opcoesNumAulas, multiple: false, value: "3"});
+    var instance8 = new SelectPure(".single-select-turno", {options: opcoesTurno, multiple: false, value: "A"});
+    var instance9 = new SelectPure(".single-select-shf", {options: opcoesBool, multiple: false, value: "False"});
+
 
     function handleClick() {
+      // Gera o caminho para o gerador. Sera melhorado no futuro
       var url = "/gerar?";
       url = url + 'cursos=' + cursos.join('&cursos=');
       if (instance1.value() !== undefined) {url = url + '&no_prof=' + instance1.value().join("&no_prof=");}
@@ -78,6 +91,8 @@
       url = url + '&min_aulas_dia=' + instance5.value();
       url = url + '&dia_vazio=' + instance6.value();
       url = url + '&aulas_seguidas=' + instance7.value();
+      url = url + '&turno=' + instance8.value();
+      url = url + '&shf=' + instance9.value();
 
       window.location.href = url;
     }

@@ -132,6 +132,20 @@
               {% endfor %}
             </ul>
           </li>
+          <li class="cd-schedule__group">
+            <div class="cd-schedule__top-info"><span>SHF</span></div>
+            <ul>
+              {% for x in escolhas %}
+              {% if 'SHF' in x.dia %}
+              <li class="cd-schedule__event">
+                <a data-start="{{x.inicio}}" data-end="{{x.fim}}" data-content="{{x.curso}}_{{x.turma}}" data-event="event-{{ x.indice }}" href="#0">
+                  <em class="cd-schedule__name ">{{x.curso}}</em>
+                </a>
+              </li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
         </ul>
       </div>
 
