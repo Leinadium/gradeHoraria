@@ -20,13 +20,11 @@ scheduler = BackgroundScheduler(daemon=True)
 
 
 # scheduling the scraper for each day
-try:
-    @scheduler.scheduled_job('cron', id='job_scraper', hour=0)
-    def run_scraper():
-        scraper.run()
-        scraper.update_database()
-except SchedulerAlreadyRunningError:
-    pass  # the scheduler is already defined ?
+
+@scheduler.scheduled_job('cron', id='job_scraper', hour=0)
+def run_scraper():
+    scraper.run()
+    scraper.update_database()
 
 
 def create_app(config_name):
@@ -49,6 +47,9 @@ def create_app(config_name):
     from .resultado import resultado as resultado_blueprint
     app.register_blueprint(resultado_blueprint)
 
-    scheduler.start()
+    try:
+        scheduler.start()
+    except SchedulerAlreadyRunningError:
+        pass  # scheduler is already defined and running
 
     return app
