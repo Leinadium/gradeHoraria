@@ -12,6 +12,7 @@ SRCPATH = path.dirname(path.realpath(__file__))
 
 PATH_TO_CREDENTIALS = path.join(SRCPATH, 'credentials.json')
 PATH_TO_DRIVER = path.join(SRCPATH, 'driver', 'geckodriver27.exe')
+PATH_TO_DRIVER_PI = '/usr/bin/chromedriver'
 PATH_TO_DATA_FOLDER = path.join(SRCPATH, 'data')
 PATH_TO_DATA_CSV = path.join(PATH_TO_DATA_FOLDER, 'download.csv')
 PATH_TO_DATA_JSON = path.join(PATH_TO_DATA_FOLDER, 'download.json')
@@ -48,7 +49,7 @@ def _get_browser():
             "download.directory_upgrade": True,
             "safebrowsing.enabled": True
         })
-        browser = webdriver.Firefox(options=opt, service_log_path=devnull)
+        browser = webdriver.Chrome(executable_path=PATH_TO_DRIVER_PI,options=opt, service_log_path=devnull)
 
     else:
         raise Exception("Unknown source for selenium webdriver")
