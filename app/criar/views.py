@@ -15,7 +15,7 @@ def inicio():
     all_cursos = Curso.query.order_by('code')
     dict_cursos = [{'label': '%s [%s]' % (x.code, x.name), 'value': x.code} for x in all_cursos]
 
-    return render_template('criar/inicio.html', title='Criar', dict_cursos=dict_cursos)
+    return render_template('criar/inicio.html', title='Criar', dict_cursos=dict_cursos, h_100=True)
 
 
 @criar.route('/criar/<string:escolhas>', methods=['GET', 'POST'])
@@ -73,4 +73,4 @@ def configuracao(escolhas):
     return render_template('criar/configuracao.html', form=form, title='Configuracao')
     '''
     return render_template('criar/configuracao.html', title='Configuracao', list_cursos=dumps(escolhas),
-                           dict_professores=dumps(professores), dict_horas=dumps(times), dict_destinos=dumps(destinos))
+                           dict_professores=dumps(professores), dict_horas=dumps(times), dict_destinos=dumps(destinos), h_100=False )
