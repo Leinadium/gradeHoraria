@@ -15,7 +15,7 @@ from . import scraper
 db = SQLAlchemy()
 
 # scheduler
-scheduler = BackgroundScheduler()
+scheduler = BackgroundScheduler(daemon=True)
 
 
 # scheduling the scraper for each day
