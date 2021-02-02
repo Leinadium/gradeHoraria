@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
 from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers import SchedulerAlreadyRunningError
 
 # local imports
 from config import app_config
@@ -19,11 +20,13 @@ scheduler = BackgroundScheduler(daemon=True)
 
 
 # scheduling the scraper for each day
-
-@scheduler.scheduled_job('cron', id='job_scraper', hour=0)
-def run_scraper():
-    scraper.run()
-    scraper.update_database()
+try:
+    @scheduler.scheduled_job('cron', id='job_scraper', hour=0)
+    def run_scraper():
+        scraper.run()
+        scraper.update_database()
+except SchedulerAlreadyRunningError:
+    pass  # the scheduler is already defined ?
 
 
 def create_app(config_name):
